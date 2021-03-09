@@ -18,12 +18,18 @@ class App extends Component {
     this.updatePost = this.updatePost.bind( this );
     this.deletePost = this.deletePost.bind( this );
     this.createPost = this.createPost.bind( this );
+    this.applyFilter= this.applyFilter.bind( this );
   }
   
-  componentDidMount() {
+  renderCurrentPostList() {
     axios.get('https://practiceapi.devmountain.com/api/posts')
     .then(res=> this.setState({posts:res.data}))
     .catch(err=> console.log(err))
+  }
+
+  // 
+  componentDidMount() {
+    this.renderCurrentPostList();
   }
 
   updatePost(id,text) {
@@ -44,12 +50,20 @@ class App extends Component {
     .catch(err=>console.log(err))
   }
 
+  applyFilter(posts,clearFilter) {
+    if (!clearFilter) {
+      this.setState({
+        posts:posts
+      });
+    } else {this.renderCurrentPostList()}
+  }
+
   render() {
     const { posts } = this.state;
 
     return (
       <div className="App__parent">
-        <Header />
+        <Header applyFilterFn={this.applyFilter}/>
 
         <section className="App__content">
 
